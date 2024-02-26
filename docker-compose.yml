@@ -30,6 +30,7 @@ services:
     container_name: api
     volumes:
       - ./api:/var/www
+      - ./confs/php/local.ini:/usr/local/etc/php/conf.d/local.ini
     ports:
       - '9001:9000'
     networks:
@@ -42,6 +43,7 @@ services:
     container_name: web
     volumes:
       - ./web:/var/www
+      - ./confs/php/local.ini:/usr/local/etc/php/conf.d/local.ini
     ports:
       - '9002:9000'
     networks:
