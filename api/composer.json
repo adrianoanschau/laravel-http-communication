@@ -1,8 +1,11 @@
 {
-    "name": "laravel/laravel",
+    "name": "laravel-http-communication/api",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "description": "API para POC de comunicação HTTP entre aplicações PHP.",
+    "keywords": [
+        "laravel",
+        "framework"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.1",
