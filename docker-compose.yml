@@ -1,0 +1,71 @@
+version: '3.9'
+
+services:
+  api-server:
+    image: nginx:1.21.1
+    container_name: api-server
+    volumes:
+      - ./api/confs/servers/:/etc/nginx/conf.d/
+      - ./api:/var/www
+    ports:
+      - '8001:8000'
+    networks:
+      - network
+
+  web-server:
+    image: nginx:1.21.1
+    container_name: web-server
+    volumes:
+      - ./web/confs/servers/:/etc/nginx/conf.d/
+      - ./web:/var/www
+    ports:
+      - '8002:8000'
+    networks:
+      - network
+
+  api:
+    image: php:8.2-fpm
+    build:
+      context: .
+    container_name: api
+    volumes:
+      - ./api:/var/www
+    ports:
+      - '9001:9000'
+    networks:
+      - network
+
+  web:
+    image: php:8.2-fpm
+    build:
+      context: .
+    container_name: web
+    volumes:
+      - ./web:/var/www
+    ports:
+      - '9002:9000'
+    networks:
+      - network
+
+  database:
+    image: postgres:15
+    restart: always
+    container_name: database
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      PG_DATA: /var/lib/postgresql/data
+    volumes:
+      - appdata:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+    networks:
+      - network
+
+volumes:
+  appdata:
+
+networks:
+  network:
+    driver: bridge
