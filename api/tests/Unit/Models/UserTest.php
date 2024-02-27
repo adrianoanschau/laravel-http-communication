@@ -18,21 +18,23 @@ class UserTest extends TestCase
     {
         $this->assertTrue(
           Schema::hasColumns('users', [
-            'id', 'name', 'email', 'email_verified_at', 'password', 'created_at', 'updated_at'
+            'id', 'firstname', 'lastname', 'email', 'email_verified_at', 'username', 'password', 'created_at', 'updated_at'
         ]), 1);
     }
 
     public function test_create_user(): void
     {
         $user = User::factory()->create([
-            "name"=> "Test User",
+            "firstname"=> "Test",
+            "lastname"=> "User",
             "email"=> "testuser@example.com",
             'email_verified_at' => now(),
+            'username' => 'testuser',
             "password"=> Hash::make('password'),
             'remember_token' => Str::random(10),
         ]);
 
-        $this->assertEquals("Test User", $user->name);
+        $this->assertEquals("Test User", $user->fullname);
         $this->assertEquals("testuser@example.com", $user->email);
     }
 }

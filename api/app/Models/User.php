@@ -23,8 +23,10 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'firstname',
+        'lastname',
         'email',
+        'username',
         'password',
     ];
 
@@ -52,5 +54,13 @@ class User extends Authenticatable
         static::creating(function ($model) {
             $model->id = Str::uuid();
         });
+    }
+
+    public function getFullnameAttribute() {
+        return "{$this->firstname} {$this->lastname}";
+    }
+
+    public function isAdmin() {
+        return $this->admin;
     }
 }

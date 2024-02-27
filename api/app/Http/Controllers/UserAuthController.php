@@ -10,14 +10,18 @@ class UserAuthController extends Controller
 {
     public function register(Request $request){
         $registerUserData = $request->validate([
-            "name" => "required|string",
+            "firstname" => "required|string",
+            "lastname" => "required|string",
             "email" => "required|string|email|unique:users",
+            "username" => "required|string|unique:users|min:4",
             "password" => "required|min:8"
         ]);
 
         $user = User::create([
-            "name" => $registerUserData["name"],
+            "firstname" => $registerUserData["firstname"],
+            "lastname" => $registerUserData["lastname"],
             "email" => $registerUserData["email"],
+            "username" => $registerUserData["username"],
             "password" => Hash::make($registerUserData["password"]),
         ]);
 
@@ -28,11 +32,11 @@ class UserAuthController extends Controller
 
     public function login(Request $request){
         $loginUserData = $request->validate([
-            "email" => "required|string|email",
+            "username" => "required|string|min:4",
             "password" => "required|min:8"
         ]);
 
-        $user = User::where("email", $loginUserData["email"])->first();
+        $user = User::where("username", $loginUserData["username"])->first();
 
         if(!$user || !Hash::check($loginUserData["password"], $user->password)){
             return response()->json([
@@ -40,7 +44,13 @@ class UserAuthController extends Controller
             ], 401);
         }
 
-        $token = $user->createToken($user->name."-AuthToken")->plainTextToken;
+        $abilities = [];
+
+        if ($user->isAdmin()) {
+            $abilities[] = 'admin';
+        }
+
+        $token = $user->createToken($user->username."-AuthToken", $abilities)->plainTextToken;
 
         return response()->json([
             "access_token" => $token,

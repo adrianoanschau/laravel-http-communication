@@ -25,7 +25,7 @@ class PersonalAccessTokenTest extends TestCase
     {
         $user = User::first();
 
-        $userToken = $user->createToken($user->name."-AuthToken");
+        $userToken = $user->createToken($user->username."-AuthToken");
 
         $token = PersonalAccessToken::first();
 

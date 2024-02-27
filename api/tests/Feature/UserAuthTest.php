@@ -18,7 +18,9 @@ class UserAuthTest extends TestCase
     public function test_register_a_new_user(): void
     {
         $response = $this->postJson('/register', [
-            'name'=> 'Test User',
+            "firstname"=> "Test",
+            "lastname"=> "User",
+            'username'=> 'testuser',
             'email'=> 'testuser@example.com',
             'password'=> 'password',
         ]);
@@ -29,19 +31,21 @@ class UserAuthTest extends TestCase
 
     public function test_login_a_user(): void
     {
-        $email = "testuser@example.com";
+        $username = "testuser";
         $password = "password";
 
         $user = User::factory()->create([
-            "name"=> "Test User",
-            "email"=> $email,
+            "firstname"=> "Test",
+            "lastname"=> "User",
+            "email"=> "testuser@example.com",
             'email_verified_at' => now(),
+            "username" => $username,
             "password"=> Hash::make($password),
             'remember_token' => Str::random(10),
         ]);
 
         $response = $this->postJson('/login', [
-            'email' => $email,
+            'username' => $username,
             'password' => $password,
         ]);
 
@@ -49,25 +53,29 @@ class UserAuthTest extends TestCase
 
         $response->assertStatus(200);
 
-        $this->assertEquals($user->name, $personalAccessToken->tokenable->name);
+        $this->assertEquals($user->firstname, $personalAccessToken->tokenable->firstname);
+        $this->assertEquals($user->lastname, $personalAccessToken->tokenable->lastname);
         $this->assertEquals($user->email, $personalAccessToken->tokenable->email);
+        $this->assertEquals($user->username, $personalAccessToken->tokenable->username);
     }
 
     public function test_login_with_invalid_credentials(): void
     {
-        $email = "testuser@example.com";
+        $username = "testuser";
         $password = "password";
 
         User::factory()->create([
-            "name"=> "Test User",
-            "email"=> $email,
+            "firstname"=> "Test",
+            "lastname"=> "User",
+            "email"=> "testuser@example.com",
             'email_verified_at' => now(),
+            "username" => $username,
             "password"=> Hash::make($password),
             'remember_token' => Str::random(10),
         ]);
 
         $response = $this->postJson('/login', [
-            'email' => $email,
+            "username" => $username,
             'password' => "anotherpassword",
         ]);
 
@@ -77,18 +85,20 @@ class UserAuthTest extends TestCase
 
     public function test_logout_a_user(): void
     {
-        $email = "testuser@example.com";
+        $username = "testuser";
         $password = "password";
 
         $user = User::factory()->create([
-            "name"=> "Test User",
-            "email"=> $email,
+            "firstname"=> "Test",
+            "lastname"=> "User",
+            "email"=> "testuser@example.com",
             'email_verified_at' => now(),
+            "username" => $username,
             "password"=> Hash::make($password),
             'remember_token' => Str::random(10),
         ]);
 
-        $token = $user->createToken($user->name."-AuthToken")->plainTextToken;
+        $token = $user->createToken($user->username."-AuthToken")->plainTextToken;
 
         $response = $this->postJson('/logout', [], [
             'Authorization' => "Bearer {$token}",
