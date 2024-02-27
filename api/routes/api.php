@@ -21,7 +21,7 @@ Route::get("/", function () {
     ]);
 });
 
-Route::middleware("auth:sanctum")->get("/profile", function (Request $request) {
+Route::middleware(["auth:sanctum", 'ability:admin'])->get("/profile", function (Request $request) {
     return $request->user();
 });
 
