@@ -23,7 +23,7 @@ class UserAuthController extends Controller
 
         return response()->json([
             "message" => "User Created",
-        ]);
+        ], 201);
     }
 
     public function login(Request $request){
@@ -32,9 +32,9 @@ class UserAuthController extends Controller
             "password" => "required|min:8"
         ]);
 
-        $user = User::where("email",$loginUserData["email"])->first();
+        $user = User::where("email", $loginUserData["email"])->first();
 
-        if(!$user || !Hash::check($loginUserData["password"],$user->password)){
+        if(!$user || !Hash::check($loginUserData["password"], $user->password)){
             return response()->json([
                 "message" => "Invalid Credentials"
             ], 401);

@@ -6,10 +6,12 @@ use Tests\TestCase;
 
 class WelcomeTest extends TestCase
 {
-    public function test_the_application_returns_a_successful_response(): void
+    public function test_returns_app_name_and_version(): void
     {
-        $response = $this->get('/');
+        $response = $this->getJson('/');
 
-        $response->assertStatus(200);
+        $response->assertStatus(200)
+            ->assertJsonPath('name', config('app.name'))
+            ->assertJsonPath('version', config('app.version'));
     }
 }
