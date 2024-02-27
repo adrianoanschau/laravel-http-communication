@@ -28,7 +28,9 @@ Route::middleware(["auth:sanctum"])->get("/profile", function (Request $request)
 
 Route::post("register", [UserAuthController::class, "register"]);
 Route::post("login", [UserAuthController::class, "login"]);
-Route::post("logout", [UserAuthController::class, "logout"])
-  ->middleware("auth:sanctum");
+Route::middleware("auth:sanctum")
+    ->post("logout", [UserAuthController::class, "logout"]);
 
-Route::resource('users', UserController::class)->middleware(["auth:sanctum", 'ability:admin']);
+Route::middleware(["auth:sanctum", 'ability:admin'])
+    ->resource('users', UserController::class)
+    ->except(['create','edit']);
