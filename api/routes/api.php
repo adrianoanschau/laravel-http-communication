@@ -15,12 +15,7 @@ use App\Http\Controllers\UserAuthController;
 |
 */
 
-Route::get("/", function () {
-    return "HELLO LARAVEL";
-});
-
-
-Route::middleware("auth:sanctum")->get("/user", function (Request $request) {
+Route::middleware("auth:sanctum")->get("/profile", function (Request $request) {
     return $request->user();
 });
 
