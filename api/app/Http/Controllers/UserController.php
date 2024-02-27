@@ -23,24 +23,39 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        $user = User::create($request->all());
+        $storeUserData = $request->validate([
+            "email" => "required|string|email|unique:users",
+            "firstname" => "string",
+            "lastname" => "string",
+        ]);
+
+        $user = User::create($storeUserData);
 
         return new UserResource($user);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user)
     {
-        $user = User::findOrFail($id);
+        $updateUserData = $request->validate([
+            "email" => "string|email|unique:users",
+            "firstname" => "string",
+            "lastname" => "string",
+            'reset_password' => "boolean"
+        ]);
 
-        $user->update($request->all());
+        if (isset($updateUserData['reset_password']) && $updateUserData['reset_password']) {
+            unset($updateUserData['reset_password']);
+
+            $updateUserData['password'] = null;
+        }
+
+        $user->update($updateUserData);
 
         return new UserResource($user);
     }
 
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        $user = User::findOrFail($id);
-
         $user->delete();
 
         return new UserResource($user);

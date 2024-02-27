@@ -1,0 +1,17 @@
+meta {
+  name: Create A User
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:8001/users
+  body: multipartForm
+  auth: none
+}
+
+body:multipart-form {
+  firstname: Teste 2
+  lastname: Teste 2
+  email: teste2@email.com
+}
