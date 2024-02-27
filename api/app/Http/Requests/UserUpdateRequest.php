@@ -19,6 +19,7 @@ class UserUpdateRequest extends FormRequest
             "email" => "string|email|unique:users",
             "firstname" => "string",
             "lastname" => "string",
+            "password" => "min:8",
             'reset_password' => "boolean"
         ];
     }

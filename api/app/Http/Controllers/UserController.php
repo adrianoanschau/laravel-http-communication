@@ -39,7 +39,7 @@ class UserController extends Controller
     {
         $updateUserData = $request->all();
 
-        if ($updateUserData['reset_password']) {
+        if (isset($updateUserData['reset_password']) && !!$updateUserData['reset_password']) {
             unset($updateUserData['reset_password']);
 
             $updateUserData['password'] = null;

@@ -12,25 +12,30 @@ use App\Http\Controllers\UserController;
 |
 | Here is where you can register API routes for your application. These
 | routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
+| be assigned to the 'api' middleware group. Make something great!
 |
 */
-Route::get("/", function () {
+Route::get('/', function () {
     return response()->json([
         'name' => config('app.name'),
         'version' => config('app.version')
     ]);
 });
 
-Route::middleware(["auth:sanctum"])->get("/profile", function (Request $request) {
-    return $request->user();
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('profile', function (Request $request) {
+        return $request->user();
+    });
+
+    Route::post('register', [UserAuthController::class, 'register']);
+    Route::post('login', [UserAuthController::class, 'login']);
+    Route::post('logout', [UserAuthController::class, 'logout']);
+
+    Route::middleware('ability:admin')
+        ->resource('users', UserController::class)
+        ->only(['index', 'store', 'destroy']);
+
+    Route::middleware('is-owner-or-admin')
+        ->resource('users', UserController::class)
+        ->only(['show', 'update']);
 });
-
-Route::post("register", [UserAuthController::class, "register"]);
-Route::post("login", [UserAuthController::class, "login"]);
-Route::middleware("auth:sanctum")
-    ->post("logout", [UserAuthController::class, "logout"]);
-
-Route::middleware(["auth:sanctum", 'ability:admin'])
-    ->resource('users', UserController::class)
-    ->except(['create','edit']);

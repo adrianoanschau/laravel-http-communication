@@ -5,13 +5,14 @@ meta {
 }
 
 patch {
-  url: http://localhost:8001/users/6237ecaa-6459-4980-9bce-2db6c07738e3?reset_password=1
+  url: http://localhost:8001/users/4bed4c4d-af6c-4522-ae06-430a7a3198be?password=password
   body: multipartForm
   auth: none
 }
 
 query {
-  reset_password: 1
+  password: password
+  ~reset_password: 1
   ~email: danika.kiehn@example.com
 }
 
