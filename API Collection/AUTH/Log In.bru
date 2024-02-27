@@ -1,0 +1,29 @@
+meta {
+  name: Log In
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:8001/login
+  body: multipartForm
+  auth: none
+}
+
+headers {
+  Accept: application/json
+  Content-Type: application/json
+}
+
+body:json {
+  {}
+}
+
+body:multipart-form {
+  email: adrianoanschau@gmail.com
+  password: 12345678
+}
+
+script:post-response {
+  bru.setEnvVar("ACCESS_TOKEN", res.body.access_token);
+}

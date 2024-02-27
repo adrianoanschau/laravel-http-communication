@@ -1,0 +1,29 @@
+meta {
+  name: Log Out
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:8001/logout
+  body: none
+  auth: none
+}
+
+headers {
+  Accept: application/json
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: 1|Lrqya4zJCtmhx8HlfYePfhnVfM86LAr2Uu7CFKpW14a4b3c9
+}
+
+body:json {
+  {}
+}
+
+body:multipart-form {
+  email: adrianoanschau@gmail.com
+  password: 12345678
+}
