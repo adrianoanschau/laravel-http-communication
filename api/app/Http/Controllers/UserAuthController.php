@@ -2,27 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\LoginRequest;
 use App\Models\User;
 
 class UserAuthController extends Controller
 {
-    public function register(Request $request){
-        $registerUserData = $request->validate([
-            "firstname" => "required|string",
-            "lastname" => "required|string",
-            "email" => "required|string|email|unique:users",
-            "username" => "required|string|unique:users|min:4",
-            "password" => "required|min:8"
-        ]);
-
-        $user = User::create([
-            "firstname" => $registerUserData["firstname"],
-            "lastname" => $registerUserData["lastname"],
-            "email" => $registerUserData["email"],
-            "username" => $registerUserData["username"],
-            "password" => Hash::make($registerUserData["password"]),
+    public function register(RegisterRequest $request){
+        User::create([
+            "firstname" => $request->get("firstname"),
+            "lastname" => $request->get("lastname"),
+            "email" => $request->get("email"),
+            "username" => $request->get("username"),
+            "password" => Hash::make($request->get("password")),
         ]);
 
         return response()->json([
@@ -30,15 +23,11 @@ class UserAuthController extends Controller
         ], 201);
     }
 
-    public function login(Request $request){
-        $loginUserData = $request->validate([
-            "username" => "required|string|min:4",
-            "password" => "required|min:8"
-        ]);
+    public function login(LoginRequest $request){
 
-        $user = User::where("username", $loginUserData["username"])->first();
+        $user = User::where("username", $request->get("username"))->first();
 
-        if(!$user || !Hash::check($loginUserData["password"], $user->password)){
+        if(!$user || !Hash::check($request->get("password"), $user->password)){
             return response()->json([
                 "message" => "Invalid Credentials"
             ], 401);

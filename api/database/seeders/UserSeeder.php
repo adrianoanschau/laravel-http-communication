@@ -18,6 +18,6 @@ class UserSeeder extends Seeder
             'admin' => true,
         ]);
 
-        \App\Models\User::factory(185)->create();
+        \App\Models\User::factory(75)->create();
     }
 }

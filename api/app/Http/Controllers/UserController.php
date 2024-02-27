@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\UserStoreRequest;
+use App\Http\Requests\UserUpdateRequest;
 use App\Models\User;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\UserCollection;
@@ -11,7 +13,12 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-        $users = User::paginate($request->get('per_page'));
+        $request->validate([
+            'page' => 'integer',
+            'per_page' => 'integer',
+        ]);
+
+        $users = User::paginate($request->get('per_page', 10));
 
         return new UserCollection($users);
     }
@@ -21,29 +28,18 @@ class UserController extends Controller
         return new UserResource($user);
     }
 
-    public function store(Request $request)
+    public function store(UserStoreRequest $request)
     {
-        $storeUserData = $request->validate([
-            "email" => "required|string|email|unique:users",
-            "firstname" => "string",
-            "lastname" => "string",
-        ]);
-
-        $user = User::create($storeUserData);
+        $user = User::create($request->all());
 
         return new UserResource($user);
     }
 
-    public function update(Request $request, User $user)
+    public function update(UserUpdateRequest $request, User $user)
     {
-        $updateUserData = $request->validate([
-            "email" => "string|email|unique:users",
-            "firstname" => "string",
-            "lastname" => "string",
-            'reset_password' => "boolean"
-        ]);
+        $updateUserData = $request->all();
 
-        if (isset($updateUserData['reset_password']) && $updateUserData['reset_password']) {
+        if ($updateUserData['reset_password']) {
             unset($updateUserData['reset_password']);
 
             $updateUserData['password'] = null;
