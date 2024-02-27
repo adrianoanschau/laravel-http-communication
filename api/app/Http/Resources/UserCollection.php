@@ -7,6 +7,8 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class UserCollection extends ResourceCollection
 {
+    use Traits\PaginationInformation;
+
     /**
      * Transform the resource collection into an array.
      *
@@ -14,8 +16,6 @@ class UserCollection extends ResourceCollection
      */
     public function toArray(Request $request): array
     {
-        return [
-            'data' => $this->collection,
-        ];
+        return parent::toArray($request);
     }
 }

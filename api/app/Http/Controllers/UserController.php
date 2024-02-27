@@ -9,18 +9,23 @@ use App\Http\Resources\UserCollection;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::all();
+        $users = User::paginate($request->get('per_page'));
 
-        return response()->json(new UserCollection($users));
+        return new UserCollection($users);
+    }
+
+    public function show(User $user)
+    {
+        return new UserResource($user);
     }
 
     public function store(Request $request)
     {
         $user = User::create($request->all());
 
-        return response()->json(new UserResource($user));
+        return new UserResource($user);
     }
 
     public function update(Request $request, $id)
@@ -29,7 +34,7 @@ class UserController extends Controller
 
         $user->update($request->all());
 
-        return response()->json(new UserResource($user));
+        return new UserResource($user);
     }
 
     public function destroy($id)
@@ -38,6 +43,6 @@ class UserController extends Controller
 
         $user->delete();
 
-        return response()->json(new UserResource($user));
+        return new UserResource($user);
     }
 }
