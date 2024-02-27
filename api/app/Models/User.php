@@ -48,6 +48,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'admin' => 'boolean',
     ];
 
     public static function booted() {
@@ -56,11 +57,11 @@ class User extends Authenticatable
         });
     }
 
-    public function getFullnameAttribute() {
-        return "{$this->firstname} {$this->lastname}";
-    }
-
     public function isAdmin() {
         return $this->admin;
+    }
+
+    public function getFullnameAttribute() {
+        return "{$this->firstname} {$this->lastname}";
     }
 }
