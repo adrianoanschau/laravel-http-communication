@@ -22,13 +22,14 @@ Route::get('/', function () {
     ]);
 });
 
+Route::post('register', [UserAuthController::class, 'register']);
+Route::post('login', [UserAuthController::class, 'login']);
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('profile', function (Request $request) {
         return $request->user();
     });
 
-    Route::post('register', [UserAuthController::class, 'register']);
-    Route::post('login', [UserAuthController::class, 'login']);
     Route::post('logout', [UserAuthController::class, 'logout']);
 
     Route::middleware('ability:admin')

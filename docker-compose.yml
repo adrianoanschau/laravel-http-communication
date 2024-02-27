@@ -30,8 +30,8 @@ services:
     container_name: api
     volumes:
       - ./api:/var/www
-      - ./confs/php/local.ini:/usr/local/etc/php/conf.d/local.ini
-      - ./confs/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+      - ./api/confs/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+      - ./api/confs/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
     ports:
       - '9001:9000'
     networks:
@@ -44,7 +44,8 @@ services:
     container_name: web
     volumes:
       - ./web:/var/www
-      - ./confs/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+      - ./web/confs/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+      - ./web/confs/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
     ports:
       - '9002:9000'
       - '5173:5173'

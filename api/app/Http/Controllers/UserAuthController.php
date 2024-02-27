@@ -10,17 +10,23 @@ use App\Models\User;
 class UserAuthController extends Controller
 {
     public function register(RegisterRequest $request){
-        User::create([
-            "firstname" => $request->get("firstname"),
-            "lastname" => $request->get("lastname"),
-            "email" => $request->get("email"),
-            "username" => $request->get("username"),
-            "password" => Hash::make($request->get("password")),
-        ]);
+        try {
+            User::create([
+                "firstname" => $request->get("firstname"),
+                "lastname" => $request->get("lastname"),
+                "email" => $request->get("email"),
+                "username" => $request->get("username"),
+                "password" => Hash::make($request->get("password")),
+            ]);
 
-        return response()->json([
-            "message" => "User Created",
-        ], 201);
+            return response()->json([
+                "message" => "User Created",
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                "error" => $e->getMessage(),
+            ], 500);
+        }
     }
 
     public function login(LoginRequest $request){
@@ -43,6 +49,7 @@ class UserAuthController extends Controller
 
         return response()->json([
             "access_token" => $token,
+            "user_id" => $user->id,
         ]);
     }
 
