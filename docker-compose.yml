@@ -26,7 +26,7 @@ services:
   api:
     image: php:8.2-fpm
     build:
-      context: .
+      context: ./api
     container_name: api
     volumes:
       - ./api:/var/www
@@ -40,13 +40,14 @@ services:
   web:
     image: php:8.2-fpm
     build:
-      context: .
+      context: ./web
     container_name: web
     volumes:
       - ./web:/var/www
       - ./confs/php/local.ini:/usr/local/etc/php/conf.d/local.ini
     ports:
       - '9002:9000'
+      - '5173:5173'
     networks:
       - network
 

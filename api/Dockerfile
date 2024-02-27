@@ -26,3 +26,5 @@ RUN echo 'date.timezone="America/Sao_Paulo"' >> /usr/local/etc/php/conf.d/date.i
     && echo 'opcache.enable=1' >> /usr/local/etc/php/conf.d/opcache.conf \
     && echo 'opcache.validate_timestamps=1' >> /usr/local/etc/php/conf.d/opcache.conf \
     && echo 'opcache.fast_shutdown=1' >> /usr/local/etc/php/conf.d/opcache
+
+WORKDIR /var/www
