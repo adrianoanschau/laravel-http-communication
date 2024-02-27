@@ -14,6 +14,12 @@ use App\Http\Controllers\UserAuthController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+Route::get("/", function () {
+    return response()->json([
+        'name' => config('app.name'),
+        'version' => config('app.version')
+    ]);
+});
 
 Route::middleware("auth:sanctum")->get("/profile", function (Request $request) {
     return $request->user();
