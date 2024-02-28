@@ -1,7 +1,5 @@
 <x-guest-layout>
     <form method="POST" action="{{ route('register') }}">
-        @csrf
-
         <!-- First Name -->
         <div>
             <x-input-label for="firstname" :value="__('First Name')" />

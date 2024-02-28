@@ -26,6 +26,10 @@ class ClientService {
         return $this->http->withHeaders($headers)->post($path, $data);
     }
 
+    public function patch(string $path, array|string $query = null, array $headers = []) {
+        return $this->http->withHeaders($headers)->patch($path, $query);
+    }
+
     public function delete(string $path, array|string $query = null, array $headers = []) {
         return $this->http->withHeaders($headers)->delete($path, $query);
     }

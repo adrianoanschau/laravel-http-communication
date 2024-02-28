@@ -41,6 +41,36 @@ class UsersService {
         return $response->json();
     }
 
+    public function storeUser($data)
+    {
+        $access_token = session()->get('access_token');
+
+        $response = $this->client->post("/users", $data, [
+            'Authorization' => "Bearer {$access_token}",
+        ]);
+
+        if ($response->failed()) {
+            throw new HttpException($response->status(), 'store user failed');
+        }
+
+        return $response->json();
+    }
+
+    public function updateUser($id, $data)
+    {
+        $access_token = session()->get('access_token');
+
+        $response = $this->client->patch("/users/{$id}", $data, [
+            'Authorization' => "Bearer {$access_token}",
+        ]);
+
+        if ($response->failed()) {
+            throw new HttpException($response->status(), 'update user failed');
+        }
+
+        return $response->json();
+    }
+
     public function deleteUser(string $id)
     {
         $access_token = session()->get('access_token');
