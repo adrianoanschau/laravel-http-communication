@@ -18,11 +18,15 @@ class ClientService {
         ]));
     }
 
-    public function get(string $path, array $headers = []) {
-        return $this->http->withHeaders($headers)->get($path);
+    public function get(string $path, array|string $query = null, array $headers = []) {
+        return $this->http->withHeaders($headers)->get($path, $query);
     }
 
     public function post(string $path, array $data = [], array $headers = []) {
         return $this->http->withHeaders($headers)->post($path, $data);
+    }
+
+    public function delete(string $path, array|string $query = null, array $headers = []) {
+        return $this->http->withHeaders($headers)->delete($path, $query);
     }
 }

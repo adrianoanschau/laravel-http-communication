@@ -18,7 +18,12 @@ class UserController extends Controller
             'per_page' => 'integer',
         ]);
 
-        $users = User::paginate($request->get('per_page', 10));
+        if ($request->has('page')) {
+            $users = User::paginate($request->get('per_page', 10));
+        } else {
+            $users = User::all();
+        }
+
 
         return new UserCollection($users);
     }

@@ -2,7 +2,6 @@
 
 namespace App\Api;
 
-use Illuminate\Auth\GenericUser;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class UsersService {
@@ -12,18 +11,48 @@ class UsersService {
         $this->client = $client;
     }
 
-    public function getUser(string $id)
+    public function listUsers()
     {
         $access_token = session()->get('access_token');
 
-        $response = $this->client->get("/users/{$id}", [
+        $response = $this->client->get("/users", null, [
             'Authorization' => "Bearer {$access_token}",
         ]);
 
         if ($response->failed()) {
-            throw new HttpException(0, 'get user failed');
+            throw new HttpException($response->status(), 'list users failed');
         }
 
-        return new GenericUser($response->json('data'));
+        return $response->json();
+    }
+
+    public function getUser(string $id)
+    {
+        $access_token = session()->get('access_token');
+
+        $response = $this->client->get("/users/{$id}", null, [
+            'Authorization' => "Bearer {$access_token}",
+        ]);
+
+        if ($response->failed()) {
+            throw new HttpException($response->status(), 'get user failed');
+        }
+
+        return $response->json();
+    }
+
+    public function deleteUser(string $id)
+    {
+        $access_token = session()->get('access_token');
+
+        $response = $this->client->delete("/users/{$id}", null, [
+            'Authorization' => "Bearer {$access_token}",
+        ]);
+
+        if ($response->failed()) {
+            throw new HttpException($response->status(), 'delete user failed');
+        }
+
+        return $response->json();
     }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Api;
 
-use Illuminate\Auth\GenericUser;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class AuthService {
@@ -17,7 +16,7 @@ class AuthService {
         $response = $this->client->post('/register', $data);
 
         if ($response->failed()) {
-            throw new HttpException(0, 'register failed');
+            throw new HttpException($response->status(), 'register failed');
         }
 
         return $response;
@@ -31,19 +30,12 @@ class AuthService {
         ]);
 
         if ($response->failed()) {
-            throw new HttpException(0, 'login failed');
+            throw new HttpException($response->status(), 'login failed');
         }
 
-        $userId = $response->json('user_id');
-        $token = $response->json('access_token');
+        session()->put('access_token', $response->json('access_token'));
 
-        session()->put('access_token', $token);
-
-        return new GenericUser([
-            'id' => $userId,
-            'token' => $token,
-            'username' => $username,
-        ]);
+        return $response->json();
     }
 
     public function registerAndLogin(array $data)

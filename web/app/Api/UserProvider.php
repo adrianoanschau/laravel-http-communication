@@ -4,6 +4,7 @@ namespace App\Api;
 
 use Illuminate\Contracts\Auth\UserProvider as AuthUserProvider;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Auth\GenericUser;
 
 class UserProvider implements AuthUserProvider {
 
@@ -16,7 +17,7 @@ class UserProvider implements AuthUserProvider {
     }
 
     public function retrieveById($identifier) {
-        return $this->usersService->getUser($identifier);
+        return new GenericUser($this->usersService->getUser($identifier)['data']);
     }
 
     public function retrieveByToken($identifier, $token) {
@@ -28,7 +29,13 @@ class UserProvider implements AuthUserProvider {
     }
 
     public function retrieveByCredentials(array $credentials) {
-        return $this->authService->login($credentials['username'], $credentials['password']);
+        $data = $this->authService->login($credentials['username'], $credentials['password']);
+
+        return new GenericUser([
+            'id' => $data['user_id'],
+            'token' => $data['access_token'],
+            'username' => $credentials['username'],
+        ]);
     }
 
     public function validateCredentials(Authenticatable $user, array $credentials) {
