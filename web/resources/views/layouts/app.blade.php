@@ -12,7 +12,7 @@
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
         <!-- Scripts -->
-        @vite(['resources/css/app.scss', 'resources/js/app.js'])
+        @vite(['resources/css/app.scss', 'resources/js/app.js', 'node_modules/tw-elements/dist/js/tw-elements.umd.min.js'])
 
         @stack('styles')
     </head>
@@ -34,8 +34,6 @@
                 {{ $slot }}
             </main>
         </div>
-
-        @vite(['node_modules/tw-elements/dist/js/tw-elements.umd.min.js'])
 
         @stack('modals')
 

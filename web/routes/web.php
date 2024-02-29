@@ -30,11 +30,9 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('users', UsersController::class)->only(['index', 'store', 'update', 'destroy']);
 
-    Route::delete('users/bulk/{ids}', [UsersController::class, 'destroyBulk']);
+    Route::delete('/users/bulk/{ids}', [UsersController::class, 'destroyBulk'])->name('users.destroy.bulk');
 
-    Route::get('/list/users', function () {
-        return view('users.index');
-    })->name('users.list');
+    Route::get('/list/users', [UsersController::class, 'list'])->name('users.list');
 });
 
 require __DIR__.'/auth.php';
