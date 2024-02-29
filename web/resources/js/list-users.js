@@ -2,13 +2,50 @@
     const datatable = document.getElementById("datatable");
 
     const columns = [
-        { field: "id" },
-        { label: "Username", field: "username" },
-        { label: "First Name", field: "firstname" },
-        { label: "Last Name", field: "lastname" },
-        { label: "Email", field: "email" },
-        { label: "Admin", field: "admin" },
-        { field: "actions", sort: false },
+        { field: "id", width: 0 },
+        { label: "Username", field: "username", width: 180, fixed: true },
+        { label: "First Name", field: "firstname", width: 150 },
+        { label: "Last Name", field: "lastname", width: 150 },
+        { label: "Email", field: "email", width: 280 },
+        {
+            label: "Admin",
+            field: "admin",
+            width: 80,
+            format: (cell, value) => {
+                const input = document.createElement("input");
+                input.classList.add(
+                    "appearance-none rounded-[0.25rem] border-[0.125rem] border-solid border-neutral-300 outline-none checked:border-primary checked:bg-primary".split(
+                        " "
+                    )
+                );
+                input.setAttribute("type", "checkbox");
+                input.setAttribute("disabled", "disabled");
+                if (value === true) {
+                    input.setAttribute("checked", value);
+                }
+
+                cell.classList.add("text-center");
+                cell.textContent = "";
+                cell.append(input);
+            },
+        },
+        {
+            label: "Created At",
+            field: "created_at",
+            width: 200,
+            format: (cell, value) => {
+                cell.textContent = formatDate(value, "dd/MM/yyyy HH:ii:ss");
+            },
+        },
+        {
+            label: "Updated At",
+            field: "updated_at",
+            width: 200,
+            format: (cell, value) => {
+                cell.textContent = formatDate(value, "dd/MM/yyyy HH:ii:ss");
+            },
+        },
+        { field: "actions", sort: false, width: 120, fixed: "right" },
     ];
 
     const options = {
