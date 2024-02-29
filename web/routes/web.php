@@ -30,6 +30,8 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('users', UsersController::class)->only(['index', 'store', 'update', 'destroy']);
 
+    Route::delete('users/bulk/{ids}', [UsersController::class, 'destroyBulk']);
+
     Route::get('/list/users', function () {
         return view('users.index');
     })->name('users.list');

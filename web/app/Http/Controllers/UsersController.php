@@ -44,4 +44,9 @@ class UsersController extends Controller
     {
         return $this->usersService->deleteUser($id);
     }
+
+    public function destroyBulk(string $ids)
+    {
+        return $this->usersService->deleteUsers($ids);
+    }
 }

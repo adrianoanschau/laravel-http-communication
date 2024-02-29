@@ -40,6 +40,15 @@
         #datatable table tbody td:last-child {
             text-align: right;
         }
+        #datatable table tr.active td {
+            background-color: rgb(245, 245, 245) !important;
+        }
+
+        #datatable.loading button,
+        #datatable.loading input {
+            box-shadow: none !important;
+            opacity: 0.5 !important;
+        }
 
         button[disabled] {
             box-shadow: none !important;

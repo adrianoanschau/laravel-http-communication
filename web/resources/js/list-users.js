@@ -10,23 +10,21 @@
         {
             label: "Admin",
             field: "admin",
-            width: 80,
+            width: 100,
             format: (cell, value) => {
-                const input = document.createElement("input");
-                input.classList.add(
-                    "appearance-none rounded-[0.25rem] border-[0.125rem] border-solid border-neutral-300 outline-none checked:border-primary checked:bg-primary".split(
-                        " "
-                    )
-                );
-                input.setAttribute("type", "checkbox");
-                input.setAttribute("disabled", "disabled");
-                if (value === true) {
-                    input.setAttribute("checked", value);
-                }
-
                 cell.classList.add("text-center");
                 cell.textContent = "";
-                cell.append(input);
+
+                if (value === true) {
+                    const flag = document.createElement("span");
+                    flag.setAttribute(
+                        "class",
+                        "inline-block whitespace-nowrap rounded-[0.27rem] bg-primary px-2 rounded text-[13px] font-black text-center align-baseline text-[0.75em] font-bold leading-none text-white"
+                    );
+                    flag.textContent = "✓";
+
+                    cell.append(flag);
+                }
             },
         },
         {
@@ -59,6 +57,7 @@
     };
 
     let rows = [];
+    let selectedRowsIds = [];
 
     const rowActions = (row) => `
         <button
@@ -101,8 +100,10 @@
         "selectRows.te.datatable",
         ({ selectedRows }) => {
             if (!!selectedRows.length) {
+                selectedRowsIds = selectedRows.map((row) => row.id);
                 enableButton(bulkDeleteButton);
             } else {
+                selectedRowsIds = [];
                 disableButton(bulkDeleteButton);
             }
         }
@@ -116,7 +117,11 @@
     });
 
     const setLoading = () => {
-        asyncTable.update({ rows }, { ...options, loading: true });
+        options.loading = true;
+        datatable.classList.add("loading");
+        document.querySelector(".disable-table").classList.remove("hidden");
+
+        asyncTable.update({ rows }, options);
     };
 
     const loadData = ({ loading } = { loading: true }) => {
@@ -138,7 +143,10 @@
                 )
             );
 
-            asyncTable.update({ rows }, { ...options, loading: false });
+            options.loading = false;
+            datatable.classList.remove("loading");
+            document.querySelector(".disable-table").classList.add("hidden");
+            asyncTable.update({ rows }, options);
         });
     };
 
@@ -182,6 +190,18 @@
         };
     }
 
+    function flagRowsForDelete(ids = []) {
+        const deletedRows = Array.from(
+            datatable.querySelectorAll("& td[data-te-field='id']")
+        ).filter((row) => ids.includes(row.textContent));
+
+        deletedRows.forEach((row) => {
+            row.parentNode.classList.add("row-deleted");
+            disableButton(row.parentNode.querySelector("input"));
+            disableButton(row.parentNode.querySelector("button"));
+        });
+    }
+
     createUserFormModalForm.addEventListener(
         "submit",
         submitUserFormData(createUserFormModalForm)
@@ -211,6 +231,8 @@
 
         datatable.querySelectorAll(".edit-user").forEach((btn) => {
             btn.addEventListener("click", () => {
+                if (options.loading) return;
+
                 const userId = btn.attributes["data-user-id"].value;
 
                 editUserFormModalForm.removeEventListener(
@@ -230,20 +252,13 @@
 
         datatable.querySelectorAll(".delete-user").forEach((btn) => {
             btn.addEventListener("click", () => {
-                console.log("delete", btn.attributes["data-user-id"].value);
+                if (options.loading) return;
+
                 if (window.confirm("Do you really want to delete this user?")) {
                     const userId = btn.attributes["data-user-id"].value;
+
                     setLoading();
-
-                    const deletedRow = Array.from(
-                        datatable.querySelectorAll("& td[data-te-field='id']")
-                    ).find((row) => row.textContent === userId);
-
-                    deletedRow.parentNode.classList.add("row-deleted");
-                    disableButton(deletedRow.parentNode.querySelector("input"));
-                    disableButton(
-                        deletedRow.parentNode.querySelector("button")
-                    );
+                    flagRowsForDelete([userId]);
 
                     axios
                         .delete(`/users/${userId}`)
@@ -256,6 +271,27 @@
             });
         });
     };
+
+    bulkDeleteButton.addEventListener("click", () => {
+        if (
+            window.confirm(
+                `Do you really want to delete ${selectedRowsIds.length} users?`
+            )
+        ) {
+            if (options.loading) return;
+
+            setLoading();
+            flagRowsForDelete(selectedRowsIds);
+
+            axios
+                .delete(`/users/bulk/${selectedRowsIds.join(";")}`)
+                .then(({ data: { data } }) => {
+                    console.log(data);
+
+                    loadData({ loading: false });
+                });
+        }
+    });
 
     datatable.addEventListener("render.te.datatable", onRenderDataTable);
 

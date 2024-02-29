@@ -35,9 +35,9 @@
             </main>
         </div>
 
-        @stack('modals')
-
         @vite(['node_modules/tw-elements/dist/js/tw-elements.umd.min.js'])
+
+        @stack('modals')
 
         @stack('scripts')
     </body>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use App\Http\Requests\UserStoreRequest;
 use App\Http\Requests\UserUpdateRequest;
 use App\Models\User;
@@ -60,5 +61,18 @@ class UserController extends Controller
         $user->delete();
 
         return new UserResource($user);
+    }
+
+    public function destroyBulk(string $ids)
+    {
+        $ids = Str::of($ids)->explode(';');
+
+        $query = User::whereIn('id', $ids);
+
+        $users = $query->get();
+
+        $query->delete();
+
+        return new UserCollection($users);
     }
 }

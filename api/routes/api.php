@@ -39,4 +39,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware('is-owner-or-admin')
         ->resource('users', UserController::class)
         ->only(['show', 'update']);
+
+    Route::middleware('ability:admin')
+        ->delete('users/bulk/{ids}', [UserController::class, 'destroyBulk']);
 });

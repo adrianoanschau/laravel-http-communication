@@ -85,4 +85,19 @@ class UsersService {
 
         return $response->json();
     }
+
+    public function deleteUsers(string $ids)
+    {
+        $access_token = session()->get('access_token');
+
+        $response = $this->client->delete("/users/bulk/{$ids}", null, [
+            'Authorization' => "Bearer {$access_token}",
+        ]);
+
+        if ($response->failed()) {
+            throw new HttpException($response->status(), 'bulk delete users failed');
+        }
+
+        return $response->json();
+    }
 }
