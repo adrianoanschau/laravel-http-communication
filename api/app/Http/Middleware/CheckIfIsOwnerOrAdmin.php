@@ -18,7 +18,7 @@ class CheckIfIsOwnerOrAdmin
             throw new AuthenticationException;
         }
 
-        if ($request->user()->id === $request->route('user')->id) {
+        if ($request->user()->id === $request->route('user')) {
             return $next($request);
         }
 

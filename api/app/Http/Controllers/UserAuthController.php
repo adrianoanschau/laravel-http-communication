@@ -2,54 +2,42 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\LoginRequest;
-use App\Models\User;
+use App\Services\UserService;
+use App\Services\AuthService;
 
 class UserAuthController extends Controller
 {
-    public function register(RegisterRequest $request){
-        try {
-            User::create([
-                "firstname" => $request->get("firstname"),
-                "lastname" => $request->get("lastname"),
-                "email" => $request->get("email"),
-                "username" => $request->get("username"),
-                "password" => Hash::make($request->get("password")),
-            ]);
-
-            return response()->json([
-                "message" => "User Created",
-            ], 201);
-        } catch (\Exception $e) {
-            return response()->json([
-                "error" => $e->getMessage(),
-            ], 500);
-        }
+    public function __construct(
+        private UserService $userService,
+        private AuthService $authService,
+    )
+    {
+        $this->userService = $userService;
+        $this->authService = $authService;
     }
 
-    public function login(LoginRequest $request){
-
-        $user = User::where("username", $request->get("username"))->first();
-
-        if(!$user || !Hash::check($request->get("password"), $user->password)){
-            return response()->json([
-                "message" => "Invalid Credentials"
-            ], 401);
-        }
-
-        $abilities = [];
-
-        if ($user->isAdmin()) {
-            $abilities[] = 'admin';
-        }
-
-        $token = $user->createToken($user->username."-AuthToken", $abilities)->plainTextToken;
+    public function register(RegisterRequest $request)
+    {
+        $user = $this->userService->create($request->all());
 
         return response()->json([
-            "access_token" => $token,
-            "user_id" => $user->id,
+            "message" => "User Created",
+            "data" => $user,
+        ], 201);
+    }
+
+    public function login(LoginRequest $request)
+    {
+        $response = $this->authService->login(
+            $request->get("username"),
+            $request->get("password"),
+        );
+
+        return response()->json([
+            "access_token" => $response['token'],
+            "user_id" => $response['user']->id,
         ]);
     }
 
