@@ -6,9 +6,10 @@ use Illuminate\Contracts\Auth\UserProvider as AuthUserProvider;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Auth\GenericUser;
 
-class UserProvider implements AuthUserProvider {
-
+class UserProvider implements AuthUserProvider
+{
     private UsersService $usersService;
+
     private AuthService $authService;
 
     public function __construct(ClientService $clientService) {
@@ -16,18 +17,36 @@ class UserProvider implements AuthUserProvider {
         $this->authService = new AuthService($clientService);
     }
 
+    /**
+     * Retrieve a User by Id
+     *
+     * @param  mixed $identifier
+     * @return GenericUser
+     */
     public function retrieveById($identifier) {
         return new GenericUser($this->usersService->getUser($identifier)['data']);
     }
 
+    /**
+     * disabled method
+     */
     public function retrieveByToken($identifier, $token) {
         //
     }
 
+    /**
+     * disabled method
+     */
     public function updateRememberToken(Authenticatable $user, $token) {
         //
     }
 
+    /**
+     * Retrieve a User by Credentials
+     *
+     * @param  array $credentials
+     * @return GenericUser
+     */
     public function retrieveByCredentials(array $credentials) {
         $data = $this->authService->login($credentials['username'], $credentials['password']);
 
@@ -38,6 +57,13 @@ class UserProvider implements AuthUserProvider {
         ]);
     }
 
+    /**
+     * Validate a User with Credentials
+     *
+     * @param  Authenticatable $user
+     * @param  array $credentials
+     * @return bool
+     */
     public function validateCredentials(Authenticatable $user, array $credentials) {
         return $user->username === $credentials['username'];
     }

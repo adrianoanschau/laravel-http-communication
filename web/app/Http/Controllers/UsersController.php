@@ -13,6 +13,9 @@ class UsersController extends Controller
         $this->usersService = $usersService;
     }
 
+    /**
+     * Display the users list view.
+     */
     public function list()
     {
         $columns = [
@@ -30,11 +33,22 @@ class UsersController extends Controller
         return view('users.index', compact('columns'));
     }
 
+    /**
+     * Get a list of Users
+     *
+     * @return Illuminate\Http\Client\PendingRequest::asJson
+     */
     public function index()
     {
         return $this->usersService->listUsers();
     }
 
+    /**
+     * Store one User
+     *
+     * @param  Request $request
+     * @return Illuminate\Http\Client\PendingRequest::asJson
+     */
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -46,7 +60,14 @@ class UsersController extends Controller
         return $this->usersService->storeUser($data);
     }
 
-    public function update(Request $request, $id)
+    /**
+     * Update one User
+     *
+     * @param  Request $request
+     * @param  string $id
+     * @return Illuminate\Http\Client\PendingRequest::asJson
+     */
+    public function update(Request $request, string $id)
     {
         $data = $request->validate([
             'firstname' => 'string',
@@ -57,11 +78,23 @@ class UsersController extends Controller
         return $this->usersService->updateUser($id, $data);
     }
 
+    /**
+     * Delete one User
+     *
+     * @param  string $id
+     * @return Illuminate\Http\Client\PendingRequest::asJson
+     */
     public function destroy(string $id)
     {
         return $this->usersService->deleteUser($id);
     }
 
+    /**
+     * Delete a list of Users
+     *
+     * @param  string $ids //separated with semicolon
+     * @return Illuminate\Http\Client\PendingRequest::asJson
+     */
     public function destroyBulk(string $ids)
     {
         return $this->usersService->deleteUsers($ids);
