@@ -2,11 +2,10 @@
 
 namespace App\Repositories;
 
-
-use App\Repositories\Contracts\UserRepositoryInterface;
+use App\Repositories\Contracts\RepositoryInterface;
 use App\Models\User;
 
-class UserRepository implements UserRepositoryInterface
+class UserRepository implements RepositoryInterface
 {
     public function all()
     {
