@@ -21,11 +21,11 @@ class UserProvider implements AuthUserProvider {
     }
 
     public function retrieveByToken($identifier, $token) {
-        dd('userprovider#retrieveByToken', $identifier, $token);
+        //
     }
 
     public function updateRememberToken(Authenticatable $user, $token) {
-        dd('userprovider#updateRememberToken', $user, $token);
+        //
     }
 
     public function retrieveByCredentials(array $credentials) {

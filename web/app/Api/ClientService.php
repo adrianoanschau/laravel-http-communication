@@ -9,8 +9,11 @@ class ClientService {
     private $http;
 
     public function __construct() {
+        $api_host = config('api.host');
+        $api_port = config('api.port');
+
         $this->http = Http::setClient(new GuzzleHttpClient([
-            'base_uri' => 'http://api-server:8000',
+            'base_uri' => "http://{$api_host}:{$api_port}",
             'headers' => [
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
