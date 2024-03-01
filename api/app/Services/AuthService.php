@@ -14,6 +14,16 @@ class AuthService
     ) {
     }
 
+    /**
+     * Create one Access Token for a User
+     *
+     * @param  string $username
+     * @param  string $password
+     * @return [
+     *      'token' => 'string',
+     *      'user'  => App\Models\User
+     * ]
+     */
     public function login(string $username, string $password)
     {
         $user = $this->userRepository->findByUsername($username);

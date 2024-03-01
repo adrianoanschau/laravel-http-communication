@@ -18,6 +18,15 @@ class UserAuthController extends Controller
         $this->authService = $authService;
     }
 
+    /**
+     * Register a User
+     *
+     * @param  RegisterRequest $request
+     * @return [
+     *      "message"   => "User Created",
+     *      "user"      => App\Models\User
+     * ]
+     */
     public function register(RegisterRequest $request)
     {
         $user = $this->userService->create($request->all());
@@ -28,6 +37,15 @@ class UserAuthController extends Controller
         ], 201);
     }
 
+    /**
+     * Create a Access Token for a User
+     *
+     * @param  LoginRequest $request
+     * @return [
+     *      "access_token"  => "string",
+     *      "user_id"       => "string"
+     * ]
+     */
     public function login(LoginRequest $request)
     {
         $response = $this->authService->login(
@@ -41,6 +59,13 @@ class UserAuthController extends Controller
         ]);
     }
 
+    /**
+     * Delete a Access Token for a User
+     *
+     * @return [
+     *      "message"  => "logged out"
+     * ]
+     */
     public function logout(){
         auth()->user()->tokens()->delete();
 

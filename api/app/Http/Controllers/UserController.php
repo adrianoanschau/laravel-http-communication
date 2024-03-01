@@ -17,6 +17,12 @@ class UserController extends Controller
         $this->userService = $userService;
     }
 
+    /**
+     * Get a Collection of Users
+     *
+     * @param  Request $request
+     * @return App\Http\Resources\UserCollection
+     */
     public function index(Request $request)
     {
         $request->validate([
@@ -30,26 +36,57 @@ class UserController extends Controller
         );
     }
 
+    /**
+     * Get one User
+     *
+     * @param  string $id
+     * @return App\Http\Resources\UserResource
+     */
     public function show(string $id)
     {
         return $this->userService->find($id);
     }
 
+    /**
+     * Store one User
+     *
+     * @param  UserStoreRequest $request
+     * @return App\Http\Resources\UserResource
+     */
     public function store(UserStoreRequest $request)
     {
         return $this->userService->create($request->all());
     }
 
+    /**
+     * Update one User
+     *
+     * @param  UserUpdateRequest $request
+     * @param  string $id
+     * @return App\Http\Resources\UserResource
+     */
     public function update(UserUpdateRequest $request, string $id)
     {
         return $this->userService->update($request->all(), $id);
     }
 
+    /**
+     * Delete one User
+     *
+     * @param  string $id
+     * @return App\Http\Resources\UserResource
+     */
     public function destroy(string $id)
     {
         return $this->userService->delete($id);
     }
 
+    /**
+     * Delete a list of Users
+     *
+     * @param  string $ids //separated by semicolon
+     * @return App\Http\Resources\UserCollection
+     */
     public function destroyBulk(string $ids)
     {
         return $this->userService->bulkDelete($ids);
