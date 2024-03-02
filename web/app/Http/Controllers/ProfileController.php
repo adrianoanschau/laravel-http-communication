@@ -2,14 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+
+use App\Http\Requests\ProfileUpdateRequest;
+use App\Api\UsersService;
 
 class ProfileController extends Controller
 {
+    public function __construct(
+        private UsersService $usersService
+    ) {
+        $this->usersService = $usersService;
+    }
     /**
      * Display the user's profile form.
      */
@@ -23,16 +28,13 @@ class ProfileController extends Controller
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(ProfileUpdateRequest $request)
     {
-        $request->user()->fill($request->validated());
+        $response = $this->usersService->updateUser($request->user()->id, $request->validated());
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
-
-        $request->user()->save();
-
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        return response()->json([
+            'message' => 'Profile Updated',
+            'data' => $response['data'],
+        ]);
     }
 }

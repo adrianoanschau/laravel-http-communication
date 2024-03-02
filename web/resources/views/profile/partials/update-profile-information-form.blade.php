@@ -9,10 +9,7 @@
         </p>
     </header>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
-        @csrf
-        @method('patch')
-
+    <form method="patch" action="{{ route('profile.update') }}" class="mt-6 space-y-6" async>
         <div>
             <x-input-label for="firstname" :value="__('First Name')" />
             <x-text-input id="firstname" name="firstname" type="text" class="mt-1 block w-full" :value="old('name', $user->firstname)" required autofocus autocomplete="firstname" />
@@ -27,7 +24,7 @@
 
         <div>
             <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" />
+            <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="email" />
             <x-input-error class="mt-2" :messages="$errors->get('email')" />
 
             @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())

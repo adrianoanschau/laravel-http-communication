@@ -50,13 +50,16 @@ $("form[async]").on("submit", (event) => {
     axios
         .request({ url, method, data: formData })
         .then(({ data }) => {
+            console.log(data);
             if (data?.message) toastr.success(data.message);
 
-            toastr.info("This page refresh in 2s");
+            if (form.attr("async") === "reload") {
+                toastr.info("This page refresh in 2s");
 
-            setTimeout(() => {
-                window.location.reload();
-            }, 2000);
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
+            }
         })
         .catch(({ response: { data } }) => {
             if (data?.message) toastr.error(data.message);

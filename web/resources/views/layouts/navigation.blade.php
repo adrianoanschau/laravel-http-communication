@@ -16,9 +16,11 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
 
+                    @if(request()->user()->admin)
                     <x-nav-link :href="route('users.list')" :active="request()->routeIs('users.list')">
                         {{ __('Users') }}
                     </x-nav-link>
+                    @endif
                 </div>
             </div>
 
@@ -74,9 +76,12 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+
+            @if(request()->user()->admin)
             <x-responsive-nav-link :href="route('users.list')" :active="request()->routeIs('users.list')">
                 {{ __('Users') }}
             </x-responsive-nav-link>
+            @endif
         </div>
 
         <!-- Responsive Settings Options -->

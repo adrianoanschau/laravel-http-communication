@@ -1,6 +1,7 @@
 import $ from "jquery";
 import { Datatable as TeDatatable } from "tw-elements";
 import { format } from "date-fns";
+import toastr from "toastr";
 
 export class DataTable {
     $loadingProgressBar = "progress-bar h-full w-[45%] bg-primary-400";
@@ -142,35 +143,51 @@ export class DataTable {
     load(loading = true) {
         if (loading) this.setLoading();
 
-        axios.get(this.$resourceUrl).then(({ data: { data } }) => {
-            this.$rows = data.map((row) =>
-                this.$columns.reduce(
-                    (acc, column, index) => {
-                        if (column.field !== "actions") {
-                            acc[column.field] = row[column.field];
+        axios
+            .get(this.$resourceUrl)
+            .then(({ data: { data } }) => {
+                this.$rows = data.map((row) =>
+                    this.$columns.reduce(
+                        (acc, column, index) => {
+                            if (column.field !== "actions") {
+                                acc[column.field] = row[column.field];
 
-                            if (column.type?.includes("date|")) {
-                                const dateFormat = column.type.split("|")[1];
+                                if (column.type?.includes("date|")) {
+                                    const dateFormat =
+                                        column.type.split("|")[1];
 
-                                this.$columns[index].format =
-                                    this.formatDate(dateFormat);
+                                    this.$columns[index].format =
+                                        this.formatDate(dateFormat);
+                                }
                             }
+
+                            return acc;
+                        },
+                        {
+                            actions: this.rowActions(row),
                         }
+                    )
+                );
 
-                        return acc;
+                this.$options.loading = false;
+
+                this.update();
+
+                this.callListeners("loading", false);
+            })
+            .catch(
+                ({
+                    response: {
+                        data: { message },
                     },
-                    {
-                        actions: this.rowActions(row),
-                    }
-                )
+                }) => {
+                    toastr.error(message);
+
+                    this.$options.loading = false;
+
+                    this.update();
+                }
             );
-
-            this.$options.loading = false;
-
-            this.update();
-
-            this.callListeners("loading", false);
-        });
     }
 
     setLoading() {

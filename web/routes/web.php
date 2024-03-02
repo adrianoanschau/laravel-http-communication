@@ -16,7 +16,7 @@ use App\Http\Controllers\UsersController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->to('dashboard');
 });
 
 Route::get('/dashboard', function () {
@@ -28,11 +28,11 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::resource('users', UsersController::class)->only(['index', 'store', 'update', 'destroy']);
-
-    Route::delete('/users/bulk/{ids}', [UsersController::class, 'destroyBulk'])->name('users.destroy.bulk');
-
-    Route::get('/list/users', [UsersController::class, 'list'])->name('users.list');
+    Route::middleware('is-admin')->group(function () {
+        Route::resource('users', UsersController::class)->only(['index', 'store', 'update', 'destroy']);
+        Route::delete('/users/bulk/{ids}', [UsersController::class, 'destroyBulk'])->name('users.destroy.bulk');
+        Route::get('/list/users', [UsersController::class, 'list'])->name('users.list');
+    });
 });
 
 require __DIR__.'/auth.php';
