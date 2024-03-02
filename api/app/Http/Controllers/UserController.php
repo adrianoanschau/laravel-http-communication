@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 use App\Http\Requests\UserStoreRequest;
 use App\Http\Requests\UserUpdateRequest;
@@ -30,10 +31,12 @@ class UserController extends Controller
             'per_page' => 'integer',
         ]);
 
-        return $this->userService->all(
-            $request->has('page'),
-            $request->get('per_page')
-        );
+        return response()->json([
+            'data' => $this->userService->all(
+                $request->has('page'),
+                $request->get('per_page')
+            ),
+        ]);
     }
 
     /**
@@ -44,7 +47,9 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        return $this->userService->find($id);
+        return response()->json([
+            'data' => $this->userService->find($id),
+        ]);
     }
 
     /**
@@ -55,7 +60,10 @@ class UserController extends Controller
      */
     public function store(UserStoreRequest $request)
     {
-        return $this->userService->create($request->all());
+        return response()->json([
+            'message' => 'User Created',
+            'data' => $this->userService->create($request->all()),
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -67,7 +75,10 @@ class UserController extends Controller
      */
     public function update(UserUpdateRequest $request, string $id)
     {
-        return $this->userService->update($request->all(), $id);
+        return response()->json([
+            'message' => 'User Updated',
+            'data' => $this->userService->update($request->all(), $id),
+        ]);
     }
 
     /**
@@ -78,7 +89,10 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        return $this->userService->delete($id);
+        return response()->json([
+            'message' => 'User Deleted',
+            'data' => $this->userService->delete($id),
+        ]);
     }
 
     /**
@@ -89,6 +103,9 @@ class UserController extends Controller
      */
     public function destroyBulk(string $ids)
     {
-        return $this->userService->bulkDelete($ids);
+        return response()->json([
+            'message' => 'Users Deleted',
+            'data' => $this->userService->bulkDelete($ids),
+        ]);
     }
 }

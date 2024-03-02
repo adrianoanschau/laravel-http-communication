@@ -54,8 +54,11 @@ class UserAuthController extends Controller
         );
 
         return response()->json([
-            "access_token" => $response['token'],
-            "user_id" => $response['user']->id,
+            'message' => 'User logged in',
+            'data' => [
+                'access_token' => $response['token'],
+                'user_id' => $response['user']->id,
+            ],
         ]);
     }
 
@@ -70,7 +73,7 @@ class UserAuthController extends Controller
         auth()->user()->tokens()->delete();
 
         return response()->json([
-          "message" => "logged out"
+          "message" => "User logged out"
         ]);
     }
 }
