@@ -32,9 +32,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('logout', [UserAuthController::class, 'logout']);
 
+    Route::get('users', [UserController::class, 'index']);
+
     Route::middleware('ability:admin')
         ->resource('users', UserController::class)
-        ->only(['index', 'store', 'destroy']);
+        ->only(['store', 'destroy']);
 
     Route::middleware('is-owner-or-admin')
         ->resource('users', UserController::class)
