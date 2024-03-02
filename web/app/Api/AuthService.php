@@ -46,9 +46,11 @@ class AuthService {
             throw new HttpException($response->status(), 'login failed');
         }
 
-        session()->put('access_token', $response->json('access_token'));
+        $data = $response->json('data');
 
-        return $response->json();
+        session()->put('access_token', $data['access_token']);
+
+        return $data;
     }
 
     /**

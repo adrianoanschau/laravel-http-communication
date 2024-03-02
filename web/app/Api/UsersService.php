@@ -2,7 +2,7 @@
 
 namespace App\Api;
 
-use Symfony\Component\HttpKernel\Exception\HttpException;
+use App\Exceptions\ApiException;
 
 class UsersService
 {
@@ -26,7 +26,7 @@ class UsersService
         ]);
 
         if ($response->failed()) {
-            throw new HttpException($response->status(), 'list users failed');
+            throw new ApiException($response->status(), $response->json());
         }
 
         return $response->json();
@@ -47,7 +47,7 @@ class UsersService
         ]);
 
         if ($response->failed()) {
-            throw new HttpException($response->status(), 'get user failed');
+            throw new ApiException($response->status(), $response->json());
         }
 
         return $response->json();
@@ -68,7 +68,7 @@ class UsersService
         ]);
 
         if ($response->failed()) {
-            throw new HttpException($response->status(), 'store user failed');
+            throw new ApiException($response->status(), $response->json());
         }
 
         return $response->json();
@@ -90,7 +90,7 @@ class UsersService
         ]);
 
         if ($response->failed()) {
-            throw new HttpException($response->status(), 'update user failed');
+            throw new ApiException($response->status(), $response->json());
         }
 
         return $response->json();
@@ -111,7 +111,7 @@ class UsersService
         ]);
 
         if ($response->failed()) {
-            throw new HttpException($response->status(), 'delete user failed');
+            throw new ApiException($response->status(), $response->json());
         }
 
         return $response->json();
@@ -132,7 +132,7 @@ class UsersService
         ]);
 
         if ($response->failed()) {
-            throw new HttpException($response->status(), 'bulk delete users failed');
+            throw new ApiException($response->status(), $response->json());
         }
 
         return $response->json();
