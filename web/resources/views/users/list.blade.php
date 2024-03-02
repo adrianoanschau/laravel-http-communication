@@ -1,8 +1,8 @@
 <?php
     $route = route('users.index');
-    $editAction = route('users.update', ['user' => 'rowId']);
-    $deleteAction = route('users.destroy', ['user' => 'rowId']);
-    $bulkDeleteAction = route('users.destroy.bulk', ['ids' => 'rowsIds']);
+    $editAction = route('users.update', ['user' => 'resourceId']);
+    $deleteAction = route('users.destroy', ['user' => 'resourceId']);
+    $bulkDeleteAction = route('users.destroy.bulk', ['ids' => 'resourceId']);
 ?>
 
 <x-datatable>
@@ -23,20 +23,32 @@
     </x-slot:actions>
 </x-datatable>
 
-<form id="bulkDeleteForm" method="DELETE" action="{{$bulkDeleteAction}}"></form>
+<form id="deleteForm" method="DELETE" action="{{$deleteAction}}" async>
+    <input type="hidden" id="resourceId" name="resourceId" />
+</form>
+
+<form id="bulkDeleteForm" method="DELETE" action="{{$bulkDeleteAction}}" async>
+    <input type="hidden" id="resourceId" name="resourceId" />
+</form>
 
 @push('modals')
     <x-form-modal id="createFormModal" title="Create User" action="{{route('users.store')}}" method="POST">
         @include('users.partials.user-form-fields')
     </x-form-modal>
 
-    <x-form-modal id="editFormModal" title="Edit User" action="{{route('users.update', ['user' => 'rowId'])}}" method="PATCH">
+    <x-form-modal id="editFormModal" title="Edit User" action="{{route('users.update', ['user' => 'resourceId'])}}" method="PATCH">
+        <input type="hidden" id="resourceId" name="resourceId" />
+
         @include('users.partials.user-form-fields')
     </x-form-modal>
 @endpush
 
 @push('scripts')
 <script type="module">
+    const submit = (event) => {
+        event.preventDefault();
+    }
+
     (function () {
         const containerSelector = "#datatable";
         const dataTable = new DataTable(
@@ -62,79 +74,37 @@
             }
         });
 
+        dataTable.on('editRow', ({ resourceId, resourceData, columns }) => {
 
-        function onSubmitUpdateData(form, rowId = null, previousData = null) {
-            return (event) => {
-                event.preventDefault();
+            const editForm = $(`#editFormModalForm`);
+            editForm.find('#resourceId').val(resourceId)
 
-                const data = Object.fromEntries(new FormData(form.get(0)));
-
-                if (previousData) {
-                    Object.entries(previousData).forEach(([key, value]) => {
-                        if (data[key] === value) {
-                            delete data[key];
-                        }
-                    });
-                }
-
-                if (!Object.keys(data).length) return;
-
-                axios
-                    .request({
-                        url: form.attr("action").replace("rowId", rowId),
-                        method: form.attr("method"),
-                        data,
-                    })
-                    .then(({ data }) => {
-                        window.location.reload();
-                    });
-            };
-        }
-
-        const editForm = $(`#editFormModalForm`);
-
-        const onEditFormSubmit = ({ rowId, rowData, columns }) => {
             columns.forEach(({ field }) => {
                 const input = editForm.find(`#${field}`);
 
-                if (rowData[field] && !!input.length) {
-                    input.val(rowData[field]);
+                if (resourceData[field] && !!input.length) {
+                    input.val(resourceData[field]);
                 }
             });
-
-            return onSubmitUpdateData(editForm, rowId, rowData);
-        };
-
-        let editFormSubmitCallback = () => {};
-
-        dataTable.on('editRow', ({ rowId, rowData, columns }) => {
-            const editAction = @json($editAction);
-
-            editForm.off("submit", editFormSubmitCallback);
-            editFormSubmitCallback = onEditFormSubmit({ rowId, rowData, columns });
-            editForm.on("submit", editFormSubmitCallback);
         });
 
-        dataTable.on('deleteRow', ({ rowId }) => {
-            const deleteAction = @json($deleteAction);
+        dataTable.on('deleteRow', ({ resourceId }) => {
 
             dataTable.setLoading();
-            dataTable.flagRowsForDelete([rowId]);
+            dataTable.flagRowsForDelete([resourceId]);
 
-            axios.delete(deleteAction.replace('rowId', rowId)).then(() => {
-                dataTable.load(false);
-            });
+            const deleteForm = $(`#deleteForm`);
+            deleteForm.find('#resourceId').val(resourceId);
+            deleteForm.submit();
         });
 
-        dataTable.on('bulkDelete', ({ rowsIds }) => {
-            const bulkDeleteAction = @json($bulkDeleteAction);
-
+        dataTable.on('bulkDelete', ({ resourcesIds }) => {
             dataTable.setLoading();
-            dataTable.flagRowsForDelete(rowsIds);
+            dataTable.flagRowsForDelete(resourcesIds);
 
-            axios.delete(bulkDeleteAction.replace('rowsIds', rowsIds.join(';'))).then(() => {
-                dataTable.load(false);
-            });
+            const deleteForm = $(`#bulkDeleteForm`);
+            deleteForm.find('#resourceId').val(resourcesIds.join(';'));
+            deleteForm.submit();
         })
     })();
 </script>

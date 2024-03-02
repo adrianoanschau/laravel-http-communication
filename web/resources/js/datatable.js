@@ -101,11 +101,13 @@ export class DataTable {
             $(btn).on("click", () => {
                 if (this.$options.loading) return;
 
-                const rowId = $(btn).data("row-id");
-                const rowData = this.$rows.find((row) => row.id === rowId);
+                const resourceId = $(btn).data("resource-id");
+                const resourceData = this.$rows.find(
+                    (resource) => resource.id === resourceId
+                );
                 this.callListeners("editRow", {
-                    rowId,
-                    rowData,
+                    resourceId,
+                    resourceData,
                     columns: this.$columns,
                 });
             });
@@ -116,8 +118,8 @@ export class DataTable {
                 if (this.$options.loading) return;
 
                 if (window.confirm("Do you really want to delete this item?")) {
-                    const rowId = $(btn).data("row-id");
-                    this.callListeners("deleteRow", { rowId });
+                    const resourceId = $(btn).data("resource-id");
+                    this.callListeners("deleteRow", { resourceId });
                 }
             });
         });
@@ -132,7 +134,7 @@ export class DataTable {
             if (this.$options.loading) return;
 
             this.callListeners("bulkDelete", {
-                rowsIds: this.$selectedRowsIds,
+                resourcesIds: this.$selectedRowsIds,
             });
         }
     }
@@ -192,7 +194,7 @@ export class DataTable {
             )
             .attr("data-te-ripple-init", true)
             .attr("data-te-ripple-color", "light")
-            .attr("data-row-id", row.id)
+            .attr("data-resource-id", row.id)
             .attr("data-te-toggle", "modal")
             .attr("data-te-target", `${this.$editModal}`)
             .html(
@@ -204,7 +206,7 @@ export class DataTable {
             )
             .attr("data-te-ripple-init", true)
             .attr("data-te-ripple-color", "light")
-            .attr("data-row-id", row.id)
+            .attr("data-resource-id", row.id)
             .html(
                 "<svg class='w-4 h-4 text-white' aria-hidden='true' xmlns='http://www.w3.org/2000/svg' fill='currentColor' viewBox='0 0 24 24'><path fill-rule='evenodd' d='M8.6 2.6A2 2 0 0 1 10 2h4a2 2 0 0 1 2 2v2h3a1 1 0 1 1 0 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V8a1 1 0 0 1 0-2h3V4c0-.5.2-1 .6-1.4ZM10 6h4V4h-4v2Zm1 4a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Zm4 0a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Z' clip-rule='evenodd'/></svg>"
             );

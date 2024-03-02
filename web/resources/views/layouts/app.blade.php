@@ -12,7 +12,12 @@
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
         <!-- Scripts -->
-        @vite(['resources/css/app.scss', 'resources/js/app.js', 'node_modules/tw-elements/dist/js/tw-elements.umd.min.js'])
+        @vite([
+            'resources/css/app.scss',
+            'node_modules/toastr/build/toastr.css',
+            'resources/js/app.js',
+            'node_modules/tw-elements/dist/js/tw-elements.umd.min.js'
+        ])
 
         @stack('styles')
     </head>

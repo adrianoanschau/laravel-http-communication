@@ -3,7 +3,7 @@
     'title',
     'show' => false,
     'method' => 'POST',
-    'action'
+    'action',
 ])
 
 <!-- Modal -->
@@ -51,7 +51,7 @@
 
       <!--Modal body-->
       <div class="relative flex-auto p-4" data-te-modal-body-ref>
-        <form id="{{$id}}Form" method="{{$method}}" action="{{$action}}">
+        <form id="{{$id}}Form" method="{{$method}}" action="{{$action}}" novalidate async>
             {{ $slot }}
 
             <!--Modal footer-->
