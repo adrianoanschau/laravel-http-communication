@@ -6,6 +6,7 @@
 ?>
 
 <x-datatable>
+    @if(request()->user()->admin)
     <x-slot:actions>
         <x-button modal="#createFormModal">
             <x-icon class="text-white">
@@ -21,6 +22,7 @@
             <span>Delete Selected Rows</span>
         </x-button>
     </x-slot:actions>
+    @endif
 </x-datatable>
 
 <form id="deleteForm" method="DELETE" action="{{$deleteAction}}" async>
@@ -31,6 +33,7 @@
     <input type="hidden" id="resourceId" name="resourceId" />
 </form>
 
+@if(request()->user()->admin)
 @push('modals')
     <x-form-modal id="createFormModal" title="Create User" action="{{route('users.store')}}" method="POST">
         @include('users.partials.user-form-fields')
@@ -42,6 +45,7 @@
         @include('users.partials.user-form-fields')
     </x-form-modal>
 @endpush
+@endif
 
 @push('scripts')
 <script type="module">
@@ -55,6 +59,7 @@
             containerSelector,
             @json($route),
             @json($columns),
+            @json(request()->user()->admin),
             "#editFormModal",
             '#bulk-delete-button'
         );

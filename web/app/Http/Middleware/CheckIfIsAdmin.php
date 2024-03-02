@@ -22,7 +22,7 @@ class CheckIfIsAdmin
         }
 
         if (!$request->user()->admin) {
-            throw new UnauthorizedHttpException('You don`t have permission');
+            throw new UnauthorizedHttpException('Unauthorized', 'You don`t have permission');
         }
 
         return $next($request);

@@ -15,7 +15,7 @@ export class DataTable {
         entries: 25,
         entriesOptions: [10, 25, 50, 100],
         fullPagination: true,
-        selectable: true,
+        selectable: false,
         multi: true,
         loadingMessage: "Fetching data...",
     };
@@ -29,12 +29,35 @@ export class DataTable {
 
     $selectedRowsIds = [];
 
-    constructor(container, resourceUrl, columns, editModal, bulkDeleteBtn) {
+    constructor(
+        container,
+        resourceUrl,
+        columns,
+        hasPermissionToEdit,
+        editModal,
+        bulkDeleteBtn
+    ) {
         this.$container = $(container);
-        this.$columns = columns;
         this.$resourceUrl = resourceUrl;
+        this.$columns = columns;
+        this.$hasPermissionToEdit = hasPermissionToEdit;
+
         this.$editModal = editModal;
         this.$bulkDeleteBtn = $(bulkDeleteBtn);
+
+        if (this.$hasPermissionToEdit) {
+            this.$columns.push({
+                field: "actions",
+                width: 120,
+                sorte: false,
+                fixed: "right",
+            });
+            this.$options.selectable = true;
+        } else {
+            this.$columns = this.$columns.filter(
+                ({ permission }) => !permission
+            );
+        }
 
         this.$table = new TeDatatable(
             this.$container.get(0),
@@ -98,6 +121,14 @@ export class DataTable {
             .parent()
             .addClass("progress-bar-container");
 
+        this.$container
+            .find(
+                `table thead tr th:nth-child(${
+                    this.$hasPermissionToEdit ? 2 : 1
+                })`
+            )
+            .addClass("id-column");
+
         this.$container.find(".edit-row-btn").each((_, btn) => {
             $(btn).on("click", () => {
                 if (this.$options.loading) return;
@@ -146,28 +177,34 @@ export class DataTable {
         axios
             .get(this.$resourceUrl)
             .then(({ data: { data } }) => {
-                this.$rows = data.map((row) =>
-                    this.$columns.reduce(
-                        (acc, column, index) => {
-                            if (column.field !== "actions") {
-                                acc[column.field] = row[column.field];
+                this.$rows = data.map((row) => {
+                    const initialData = {};
 
-                                if (column.type?.includes("date|")) {
-                                    const dateFormat =
-                                        column.type.split("|")[1];
+                    if (this.$hasPermissionToEdit) {
+                        initialData.actions = this.rowActions(row);
+                    }
 
-                                    this.$columns[index].format =
-                                        this.formatDate(dateFormat);
-                                }
-                            }
-
+                    return this.$columns.reduce((acc, column, index) => {
+                        if (column.field === "actions") return acc;
+                        if (
+                            column.permission === "admin" &&
+                            !this.$hasPermissionToEdit
+                        ) {
                             return acc;
-                        },
-                        {
-                            actions: this.rowActions(row),
                         }
-                    )
-                );
+
+                        acc[column.field] = row[column.field];
+
+                        if (column.type?.includes("date|")) {
+                            const dateFormat = column.type.split("|")[1];
+
+                            this.$columns[index].format =
+                                this.formatDate(dateFormat);
+                        }
+
+                        return acc;
+                    }, initialData);
+                });
 
                 this.$options.loading = false;
 
@@ -175,19 +212,18 @@ export class DataTable {
 
                 this.callListeners("loading", false);
             })
-            .catch(
-                ({
-                    response: {
-                        data: { message },
-                    },
-                }) => {
-                    toastr.error(message);
+            .catch((error) => {
+                if (!error.response?.data) return;
 
-                    this.$options.loading = false;
+                const {
+                    data: { message },
+                } = error.response;
+                toastr.error(message);
 
-                    this.update();
-                }
-            );
+                this.$options.loading = false;
+
+                this.update();
+            });
     }
 
     setLoading() {

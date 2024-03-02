@@ -19,8 +19,8 @@
 
 @push('styles')
     <style>
-        #datatable table thead th:nth-child(2),
-        #datatable table tbody td:nth-child(2) {
+        #datatable table thead th.id-column,
+        #datatable table tbody td[data-te-field=id] {
             display: none;
         }
         #datatable table thead th:last-child,

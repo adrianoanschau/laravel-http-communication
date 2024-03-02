@@ -28,10 +28,12 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::get('/list/users', [UsersController::class, 'list'])->name('users.list');
+    Route::get('/users', [UsersController::class, 'index'])->name('users.index');
+
     Route::middleware('is-admin')->group(function () {
-        Route::resource('users', UsersController::class)->only(['index', 'store', 'update', 'destroy']);
+        Route::resource('users', UsersController::class)->only(['store', 'update', 'destroy']);
         Route::delete('/users/bulk/{ids}', [UsersController::class, 'destroyBulk'])->name('users.destroy.bulk');
-        Route::get('/list/users', [UsersController::class, 'list'])->name('users.list');
     });
 });
 
