@@ -24,7 +24,10 @@ class UserProvider implements AuthUserProvider
      * @return GenericUser
      */
     public function retrieveById($identifier) {
-        return new GenericUser($this->usersService->getUser($identifier)['data']);
+        $data = $this->usersService->getUser($identifier)['data'];
+        $data['remember_token'] = false;
+
+        return new GenericUser($data);
     }
 
     /**
