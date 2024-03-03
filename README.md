@@ -14,12 +14,12 @@
 <p>Deixei arquivos exemplos para você usar.</p>
 
 <ul>
-    <li>Neste diretório, duplique <a href="/blob/main/.env.example">.env.example</a> para `.env`.</li>
-    <li>No diretório `api`, duplique <a href="/blob/main/api/.env.example">.env.example</a> para `api/.env`.</li>
-    <li>No diretório `web`, duplique <a href="/blob/main/web/.env.example">.env.example</a> para `web/.env`.</li>
+    <li>Neste diretório, duplique <a href="/.env.example">.env.example</a> para `.env`.</li>
+    <li>No diretório `api`, duplique <a href="/api/.env.example">.env.example</a> para `api/.env`.</li>
+    <li>No diretório `web`, duplique <a href="/web/.env.example">.env.example</a> para `web/.env`.</li>
 </ul>
 
-<p>Fique livre para modificar alguma informação se julgar necessário, mas algumas delas somente surtem efeito se o fizer antes de construir as imagens, como as credenciais de acesso do banco de dados, neste arquivo: <a href="/blob/main/.env.example">.env.example</a>.</p>
+<p>Fique livre para modificar alguma informação se julgar necessário, mas algumas delas somente surtem efeito se o fizer antes de construir as imagens, como as credenciais de acesso do banco de dados, neste arquivo: <a href="/.env.example">.env.example</a>.</p>
 
 ## Na primeira vez
 
@@ -57,7 +57,7 @@ docker compose up -d
         <ul>
             <li>Nome: api-server</li>
             <li>Porta: 8001</li>
-            <li>Diretório: <a href="/tree/main/api">api</a></li>
+            <li>Diretório: <a href="/api">api</a></li>
         </ul>
     </li>
     <li>
@@ -65,7 +65,7 @@ docker compose up -d
         <ul>
             <li>Nome: web-server</li>
             <li>Porta: 8002</li>
-            <li>Diretório: <a href="/tree/main/web">web</a></li>
+            <li>Diretório: <a href="/web">web</a></li>
         </ul>
     </li>
     <li>
@@ -73,7 +73,7 @@ docker compose up -d
         <ul>
             <li>Nome: api</li>
             <li>Porta: 9001</li>
-            <li>Diretório: <a href="/tree/main/api">api</a></li>
+            <li>Diretório: <a href="/api">api</a></li>
         </ul>
     </li>
     <li>
@@ -81,7 +81,7 @@ docker compose up -d
         <ul>
             <li>Nome: web</li>
             <li>Porta: 9002</li>
-            <li>Diretório: <a href="/tree/main/web">web</a></li>
+            <li>Diretório: <a href="/web">web</a></li>
         </ul>
     </li>
 </ul>
@@ -133,7 +133,7 @@ docker compose exec web chmod -R 777 storage
 
 ## E finalmente
 
-<p><a href="/tree/main/API%20Collection">Aqui</a> tenho uma coleção para usar em um programa de teste de API. Utilizei o <a href="https://www.usebruno.com/">Bruno</a> para montar, mas deve funcionar também com <a href="https://insomnia.rest/">Imsomnia</a>. Não testei com <a href="https://www.postman.com/">Postman</a>.</p>
+<p><a href="/API%20Collection">Aqui</a> tenho uma coleção para usar em um programa de teste de API. Utilizei o <a href="https://www.usebruno.com/">Bruno</a> para montar, mas deve funcionar também com <a href="https://insomnia.rest/">Imsomnia</a>. Não testei com <a href="https://www.postman.com/">Postman</a>.</p>
 
 <p>Acesse a aplicação no navegador com <a href="http://localhost:8002/">http://localhost:8002/</a> que a mesma lhe conduzirá para a tela de autenticação.</p>
 
