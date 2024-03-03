@@ -31,7 +31,7 @@ docker compose build
 
 ### Em seguida
 
-<p>Excute o comando a seguir e nas oportunidades futuras quando quiser rodar os containers com as imagens produzidas anteriormente:</p>
+<p>Execute o comando a seguir e nas oportunidades futuras quando quiser rodar os containers com as imagens produzidas anteriormente:</p>
 
 ```
 docker compose up -d
@@ -89,7 +89,7 @@ docker compose up -d
 ### Dependências
 
 <p>
-Precisamos instalar as dependências das aplicações que estamos rodando, os seguintes comandos irão suprir as necessidades:
+Precisamos instalar as dependências das aplicações que estamos rodando. Os seguintes comandos irão suprir as necessidades:
 </p>
 
 ```
@@ -164,11 +164,11 @@ Produzi esta aplicação, desta forma, com intuito de se aproximar de uma possí
 </p>
 
 <p>
-Por isso, quando um usuário administrador irá criar um novo usuário, ele somente poderá informar Nome, Sobrenome e Email; a criação de Nome de Usuário e Senha, fica por conta do dono do e-mail. Algo que fica para uma possível melhoria futura.
+Por isso, quando um usuário administrador irá criar um novo usuário, ele somente poderá informar Nome, Sobrenome e Email. A criação de Nome de Usuário e Senha, fica por conta do dono do e-mail, algo que fica para uma possível melhoria futura.
 </p>
 
 <p>
-A nível técnico esta aplicação poderia receber uma documentação extra da API, indicando com detalhe cada rota e as suas especificações e também um tratamento melhorado das exceções. Trabalhei aqui com o básico com o intuito de ser simples e objetivo, onde tenho o necessário: Quando acontece o erro, sei de onde ele vem.
+A nível técnico esta aplicação poderia receber uma documentação extra da API, indicando com detalhe cada rota e as suas especificações e também um tratamento melhorado das exceções. Trabalhei aqui com o básico com o intuito de ser simples e objetivo, onde tenho o necessário: Quando acontece o erro consigo identificar a sua origem.
 </p>
 
 ### Testes unitários
