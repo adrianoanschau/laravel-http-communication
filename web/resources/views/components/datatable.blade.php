@@ -28,7 +28,7 @@
             text-align: right;
         }
         #datatable table tr.active td {
-            background-color: rgb(245, 245, 245) !important;
+            background-color: rgb(82, 82, 82) !important;
         }
 
         #datatable.loading button,
