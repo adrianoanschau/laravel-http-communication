@@ -25,21 +25,21 @@
     @endif
 </x-datatable>
 
-<form id="deleteForm" method="DELETE" action="{{$deleteAction}}" async>
+<form id="deleteForm" method="DELETE" action="{{$deleteAction}}" reload="reload" async>
     <input type="hidden" id="resourceId" name="resourceId" />
 </form>
 
-<form id="bulkDeleteForm" method="DELETE" action="{{$bulkDeleteAction}}" async>
+<form id="bulkDeleteForm" method="DELETE" action="{{$bulkDeleteAction}}" reload="reload" async>
     <input type="hidden" id="resourceId" name="resourceId" />
 </form>
 
 @if(request()->user()->admin)
 @push('modals')
-    <x-form-modal id="createFormModal" title="Create User" action="{{route('users.store')}}" method="POST">
+    <x-form-modal id="createFormModal" title="Create User" action="{{route('users.store')}}" method="POST" reload="reload" async>
         @include('users.partials.user-form-fields')
     </x-form-modal>
 
-    <x-form-modal id="editFormModal" title="Edit User" action="{{route('users.update', ['user' => 'resourceId'])}}" method="PATCH">
+    <x-form-modal id="editFormModal" title="Edit User" action="{{route('users.update', ['user' => 'resourceId'])}}" method="PATCH" reload="reload" async>
         <input type="hidden" id="resourceId" name="resourceId" />
 
         @include('users.partials.user-form-fields')
@@ -94,7 +94,6 @@
         });
 
         dataTable.on('deleteRow', ({ resourceId }) => {
-
             dataTable.setLoading();
             dataTable.flagRowsForDelete([resourceId]);
 
@@ -111,6 +110,12 @@
             deleteForm.find('#resourceId').val(resourcesIds.join(';'));
             deleteForm.submit();
         })
+
+        window.reload = () => {
+            $(".dismiss-modal").click();
+
+            dataTable.load();
+        }
     })();
 </script>
 @endpush
