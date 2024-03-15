@@ -4,6 +4,8 @@
     'show' => false,
     'method' => 'POST',
     'action',
+    'async',
+    'reload'
 ])
 
 <!-- Modal -->
@@ -51,13 +53,23 @@
 
       <!--Modal body-->
       <div class="relative flex-auto p-4" data-te-modal-body-ref>
-        <form id="{{$id}}Form" method="{{$method}}" action="{{$action}}" novalidate async>
+        <form id="{{$id}}Form"
+            method="{{$method}}"
+            action="{{$action}}"
+            novalidate
+            @isset($async)
+            async
+            @endisset
+            @isset($reload)
+            reload="{{$reload}}"
+            @endisset
+            >
             {{ $slot }}
 
             <!--Modal footer-->
             <div
               class="flex flex-shrink-0 flex-wrap items-center justify-end rounded-b-md border-t-2 border-neutral-100 border-opacity-100 pt-4 dark:border-opacity-50">
-              <x-secondary-button class="mr-2">
+              <x-secondary-button class="mr-2 dismiss-modal" data-te-modal-dismiss>
                 Close
               </x-secondary-button>
 
