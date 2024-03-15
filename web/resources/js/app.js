@@ -40,7 +40,7 @@ $("form[async]").on("submit", (event) => {
         return acc;
     }, {});
 
-    if (!Object.keys(formData).length) {
+    if (!Object.keys(formData).length && method !== "DELETE") {
         toastr.warning("There was no change in the data");
         return;
     }
@@ -50,15 +50,23 @@ $("form[async]").on("submit", (event) => {
     axios
         .request({ url, method, data: formData })
         .then(({ data }) => {
-            console.log(data);
+            form.find("button[type=submit]").removeAttr("disabled");
+            Object.keys(formData).forEach((field) => {
+                form.find("input#" + field).val("");
+            });
+
             if (data?.message) toastr.success(data.message);
 
-            if (form.attr("async") === "reload") {
+            const reloadStrategy = form.attr("reload");
+
+            if (reloadStrategy === "sync") {
                 toastr.info("This page refresh in 2s");
 
                 setTimeout(() => {
                     window.location.reload();
                 }, 2000);
+            } else if (reloadStrategy) {
+                eval(reloadStrategy + "()");
             }
         })
         .catch(({ response: { data } }) => {
