@@ -176,7 +176,26 @@ export class DataTable {
 
         axios
             .get(this.$resourceUrl)
-            .then(({ data: { data } }) => {
+            .then(({ data: { data: newData } }) => {
+                this.unselectRows();
+
+                const data = newData
+                    .filter(
+                        ({ id }) => !this.$rows.map(({ id }) => id).includes(id)
+                    )
+                    .concat(
+                        this.$rows
+                            .filter(({ deleted }) => !deleted)
+                            .map((row) => {
+                                const newRowData = newData.find(
+                                    ({ id }) => row.id === id
+                                );
+                                if (!newRowData) return row;
+
+                                return { ...row, ...newRowData };
+                            })
+                    );
+
                 this.$rows = data.map((row) => {
                     const initialData = {};
 
@@ -205,6 +224,8 @@ export class DataTable {
                         return acc;
                     }, initialData);
                 });
+
+                console.log(this.$rows, newData);
 
                 this.$options.loading = false;
 
@@ -240,6 +261,13 @@ export class DataTable {
         );
     }
 
+    unselectRows() {
+        $(this.$container.get(0))
+            .find("tr > th:first-child input")
+            .trigger("click")
+            .trigger("click");
+    }
+
     rowActions(row) {
         const editBtn = $("<button>")
             .addClass(
@@ -269,8 +297,16 @@ export class DataTable {
 
     flagRowsForDelete(ids = []) {
         this.$container.find("td[data-te-field='id']").each((_, cell) => {
-            if (ids.includes($(cell).text())) {
+            const id = $(cell).text();
+            if (ids.includes(id)) {
                 $(cell).parent().addClass("row-deleted");
+                this.$rows = this.$rows.map((row) => {
+                    if (row.id === id) {
+                        row.deleted = true;
+                    }
+
+                    return row;
+                });
             }
         });
     }
